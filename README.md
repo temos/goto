@@ -4,7 +4,7 @@ A simple command-line utility to quickly find and switch to project folders
 
 ## Example Usage
 ```shell
-# add to.bashrc:
+# add to .bashrc:
 function goto {
     $to=(\goto \
         "/home/user/code/go" GO \
