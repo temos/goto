@@ -1,4 +1,4 @@
-module goto
+module github.com/temos/goto
 
 go 1.21.3
 
