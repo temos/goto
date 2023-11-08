@@ -20,18 +20,15 @@ type model struct {
 }
 
 func initialModel(entries []entry) *model {
-	searchInput := textinput.New()
-	searchInput.Prompt = fmt.Sprintf("%d/%d > ", len(entries), len(entries))
-	searchInput.Focus()
-
 	return &model{
-		entries:         entries,
-		filteredEntries: entries,
-		searchInput:     searchInput,
+		entries:     entries,
+		searchInput: textinput.New(),
 	}
 }
 
 func (m *model) Init() tea.Cmd {
+	m.searchInput.Focus()
+	m.UpdateSearch()
 	return nil
 }
 
@@ -52,7 +49,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.FixSelectedIndex()
 
 		case "enter":
-			if m.selectedIdx >= 0 && m.selectedIdx < len(m.filteredEntries) {
+			if len(m.filteredEntries) != 0 {
 				return m, tea.Quit
 			}
 
@@ -63,6 +60,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.WindowSizeMsg:
 		m.height = msg.Height
+		m.UpdateSearch()
 	}
 
 	var cmd tea.Cmd
