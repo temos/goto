@@ -9,6 +9,7 @@ type entry struct {
 	fullPath     string
 	name         string
 	prefix       string
+	rank         int
 	searchVector string
 }
 

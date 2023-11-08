@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -124,11 +125,14 @@ func (m *model) UpdateSearch() {
 		results := make([]entry, 0)
 
 		for _, entry := range m.entries {
-			if fuzzy.MatchFold(search, entry.searchVector) {
+			rank := fuzzy.RankMatchFold(search, entry.searchVector)
+			if rank != -1 {
+				entry.rank = rank
 				results = append(results, entry)
 			}
 		}
 
+		slices.SortStableFunc(results, func(left, right entry) int { return left.rank - right.rank })
 		m.filteredEntries = results
 	}
 
