@@ -42,12 +42,10 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case "up":
-			m.selectedIdx--
-			m.FixSelectedIndex()
+			m.SelectUp()
 
 		case "down":
-			m.selectedIdx++
-			m.FixSelectedIndex()
+			m.SelectDown()
 
 		case "enter":
 			if len(m.filteredEntries) != 0 {
@@ -136,18 +134,22 @@ func (m *model) UpdateSearch() {
 		m.filteredEntries = results
 	}
 
-	m.FixSelectedIndex()
+	m.selectedIdx = 0
 	m.searchInput.Prompt = fmt.Sprintf("%d/%d > ", len(m.filteredEntries), len(m.entries))
 }
 
-func (m *model) FixSelectedIndex() {
+func (m *model) SelectUp() {
+	m.selectedIdx--
 	if m.selectedIdx < 0 {
 		m.selectedIdx = 0
 	}
+}
 
-	maxSelectedIdx := min(len(m.filteredEntries), m.MaxEntriesHeight()) - 1
-	if m.selectedIdx > maxSelectedIdx {
-		m.selectedIdx = maxSelectedIdx
+func (m *model) SelectDown() {
+	m.selectedIdx++
+	maxIdx := min(len(m.filteredEntries), m.MaxEntriesHeight()) - 1
+	if m.selectedIdx >= maxIdx {
+		m.selectedIdx = maxIdx
 	}
 }
 
