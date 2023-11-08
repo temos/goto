@@ -2,6 +2,12 @@
 
 A simple command-line utility to quickly find and switch to project folders
 
+## Install
+
+```shell
+go install -trimpath -ldflags="-s -w" github.com/temos/goto@latest
+```
+
 ## Usage
 
 goto is configured by passing pairs of paths and display names as arguments:
@@ -25,7 +31,7 @@ goto_func() {
     to=$(\goto \
         "/home/user/code/go" GO \
         "/home/user/code/cs" CSHARP)
-        if [ $? -eq 0 ]; then
+    if [ $? -eq 0 ]; then
         cd "$to"
     else
         echo "$to"
