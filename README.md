@@ -19,14 +19,19 @@ goto returns a non-zero exit code when it is terminated by pressing **ctrl+c** o
 ## Example Usage
 
 ### Bash
-```shell
+```bash
 # add to .bashrc:
-function goto {
-    $to=(\goto \
+goto_func() {
+    to=$(\goto \
         "/home/user/code/go" GO \
-        "/home/user/code/dotnet" DOTNET \
-        "/home/user/projects" PROJECTS) && cd "$to"
+        "/home/user/code/cs" CSHARP)
+        if [ $? -eq 0 ]; then
+        cd "$to"
+    else
+        echo "$to"
+    fi
 }
+alias goto=goto_func
 
 # run in shell:
 goto
@@ -42,4 +47,3 @@ function goto {
 
 # run in shell:
 goto
-```
