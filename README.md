@@ -42,7 +42,7 @@ goto
 # add to powershell profile:
 function goto {
   $to=(goto.exe C:\Users\user\Desktop\code\go\ GO C:\Users\user\Desktop\code\cs\ CSHARP)
-  if ($?) { cd $to }
+  if ($?) { cd $to } else { echo $to }
 }
 
 # run in shell:
