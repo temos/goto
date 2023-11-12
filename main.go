@@ -11,6 +11,7 @@ import (
 
 func main() {
 	hexColor := flag.String("c", "#8C18E2", "active item color")
+	showHidden := flag.Bool("a", false, "show hidden directories (prefixed by a dot)")
 
 	flag.Parse()
 
@@ -35,7 +36,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	entries, err := collectEntries(paths, prefixes)
+	entries, err := collectEntries(paths, prefixes, *showHidden)
 	if err != nil {
 		fmt.Println("failed to collect entries:", err)
 		os.Exit(1)

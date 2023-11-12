@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path"
+	"strings"
 )
 
 type entry struct {
@@ -13,7 +14,7 @@ type entry struct {
 	searchVector string
 }
 
-func collectEntries(roots []string, prefixes []string) ([]entry, error) {
+func collectEntries(roots []string, prefixes []string, includeHidden bool) ([]entry, error) {
 	if len(roots) != len(prefixes) {
 		panic("prefixes must have the same length as roots")
 	}
@@ -28,6 +29,10 @@ func collectEntries(roots []string, prefixes []string) ([]entry, error) {
 
 		for _, dirEntry := range dirEntries {
 			if !dirEntry.IsDir() {
+				continue
+			}
+
+			if !includeHidden && strings.HasPrefix(dirEntry.Name(), ".") {
 				continue
 			}
 
