@@ -11,19 +11,21 @@ import (
 )
 
 type model struct {
-	noResult        bool
-	entries         []entry
-	filteredEntries []entry
-	selectedIdx     int
-	height          int
-	searchInput     textinput.Model
-	lastSearchValue string
+	noResult                  bool
+	entries                   []entry
+	activeColorEscapeSequence string
+	filteredEntries           []entry
+	selectedIdx               int
+	height                    int
+	searchInput               textinput.Model
+	lastSearchValue           string
 }
 
-func initialModel(entries []entry) *model {
+func initialModel(entries []entry, activeColorEscapeSequence string) *model {
 	return &model{
-		entries:     entries,
-		searchInput: textinput.New(),
+		entries:                   entries,
+		activeColorEscapeSequence: activeColorEscapeSequence,
+		searchInput:               textinput.New(),
 	}
 }
 
@@ -88,7 +90,7 @@ func (m *model) View() string {
 
 		isActive := m.selectedIdx == i
 		if isActive {
-			b.WriteString("\x1b[38;2;140;24;226m") // set foreground color to #8C18E2
+			b.WriteString(m.activeColorEscapeSequence) // set foreground
 			b.WriteString(entry.prefix)
 			b.WriteString(" / ")
 			b.WriteString(entry.name)
