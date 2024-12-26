@@ -7,10 +7,19 @@ import (
 )
 
 type entry struct {
-	fullPath     string
-	name         string
-	prefix       string
-	rank         int
+	// The full path of the file
+	fullPath string
+
+	// The name of the file to show after the slash
+	name string
+
+	// The file prefix to show before the slash
+	prefix string
+
+	// A value to sort the search results by
+	rank int
+
+	// A value that combines all the values this entry should be found by
 	searchVector string
 }
 
