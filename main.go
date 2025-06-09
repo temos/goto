@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
@@ -9,39 +8,34 @@ import (
 )
 
 func main() {
-	hexColor := flag.String("c", "#8C18E2", "active item color")
-	showHidden := flag.Bool("a", false, "show hidden directories (prefixed by a dot)")
-
-	flag.Parse()
-
-	if flag.NArg()%2 != 0 {
-		fmt.Println("provide an even number of arguments")
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, "failed:", err)
 		os.Exit(1)
 	}
+}
 
-	paths := make([]string, 0)
-	prefixes := make([]string, 0)
-	for i, arg := range flag.Args() {
-		if i%2 == 0 {
-			paths = append(paths, arg)
-		} else {
-			prefixes = append(prefixes, arg)
-		}
+func run() error {
+	if len(os.Args) < 2 {
+		return fmt.Errorf("the first argument must be a path to the config file")
 	}
 
-	colorEscapeSeqneuce, err := hexColorToEscapeSequence(*hexColor)
+	configFilePath := os.Args[1]
+	config, err := LoadConfig(configFilePath)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return fmt.Errorf("load config: %w", err)
 	}
 
-	entries, err := collectEntries(paths, prefixes, *showHidden)
+	activeColorEscapeSequence, err := hexColorToEscapeSequence(config.ActiveColor)
 	if err != nil {
-		fmt.Println("failed to collect entries:", err)
-		os.Exit(1)
+		return fmt.Errorf("convert activeColor: %w", err)
 	}
 
-	app := tea.NewProgram(initialModel(entries, colorEscapeSeqneuce), tea.WithAltScreen(), tea.WithOutput(os.Stderr))
+	menuEntries, err := MakeMenuEntries(config)
+	if err != nil {
+		return fmt.Errorf("make menu entries: %w", err)
+	}
+
+	app := tea.NewProgram(initialModel(menuEntries, activeColorEscapeSequence), tea.WithAltScreen(), tea.WithOutput(os.Stderr))
 
 	finalModel, err := app.Run()
 	if err != nil {
@@ -53,7 +47,8 @@ func main() {
 	if m.noResult {
 		os.Exit(1)
 	}
-
 	selected := m.filteredEntries[m.selectedIdx]
-	fmt.Println(selected.fullPath)
+	fmt.Println(selected.Value)
+
+	return nil
 }

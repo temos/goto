@@ -10,31 +10,45 @@ go install -trimpath -ldflags="-s -w" github.com/temos/goto@latest
 
 ## Usage
 
-goto is configured by passing pairs of paths and display names as arguments:
+goto is configured using a yaml configuration file, the path to which has to be passed as the first argument:
 ```shell
-goto [path1] [name1] [path2] [name2] ...
+goto ./config.yml
 ```
 
-for example:
-```shell
-goto /home/user/code/go GO /home/user/code/dotnet DOTNET
+configuration file example:
+```yaml
+activeColor: "#8C18E2" # optional, the color of the currently selected menu entry
+directories:
+  - prefix: GO
+    path: "C://source/go"
+  - prefix: DOTNET
+    path: "C://source/dotnet"
+  - prefix: PROJECTS
+    path: "C://projects"
+urls:
+  - prefix: DOCKER
+    name: HUB
+    url: https://hub.docker.com/
 ```
 
-goto returns a non-zero exit code when it is terminated by pressing **ctrl+c** or **q**
+goto returns a non-zero exit code when it is terminated by pressing **ctrl+c**
 
 ## Example Usage
 
 ### Bash
+//TODO: validate that this works
 ```bash
 # add to .bashrc:
 goto_func() {
-    to=$(\goto \
-        "/home/user/code/go" GO \
-        "/home/user/code/cs" CSHARP)
-    if [ $? -eq 0 ]; then
-        cd "$to"
+    to=$(\goto config.yml)
+    if [ ! $? -eq 0 ]; then
+        return
+    fi
+
+    if [[ "$to" == *"://"* ]]
+        xdg-open "$to"
     else
-        echo "$to"
+        cd "$to"
     fi
 }
 alias goto=goto_func
@@ -47,8 +61,16 @@ goto
 ```powershell
 # add to powershell profile:
 function goto {
-  $to=(goto.exe C:\Users\user\Desktop\code\go\ GO C:\Users\user\Desktop\code\cs\ CSHARP)
-  if ($?) { cd $to } else { echo $to }
+  $to=(goto.exe . config.yml)
+  if (!$?) {
+    return
+  }
+
+  if ($to.Contains("://")) {
+    start "$to"
+  } else {
+    cd "$to"
+  }
 }
 
 # run in shell:

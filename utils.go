@@ -5,7 +5,10 @@ import (
 	"strconv"
 )
 
+// hexColorToEscapeSequence converts a hexadecimal representation of a color into an ANSI escape sequence
+// which, when printed to the terminal, changes the output following this sequence to this color
 func hexColorToEscapeSequence(hex string) (string, error) {
+	//strip the leading hash symbol, if present
 	if len(hex) > 0 && hex[0] == '#' {
 		hex = hex[1:]
 	}
