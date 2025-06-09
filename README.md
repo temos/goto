@@ -4,9 +4,13 @@ A simple command-line utility to quickly find and switch to project folders and 
 
 ## Install
 
+### Using go install
 ```shell
 go install -trimpath -ldflags="-s -w" github.com/temos/goto@latest
 ```
+
+### Pre-Built Binaries
+Grab the latest binaries from https://github.com/temos/goto/releases
 
 ## Usage
 
