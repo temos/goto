@@ -65,7 +65,7 @@ goto
 ```powershell
 # add to powershell profile:
 function goto {
-  $to=(goto.exe . config.yml)
+  $to=(goto.exe config.yml)
   if (!$?) {
     return
   }
