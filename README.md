@@ -1,6 +1,6 @@
 # GOTO
 
-A simple command-line utility to quickly find and switch to project folders
+A simple command-line utility to quickly find and switch to project folders and open URLs.
 
 ## Install
 
